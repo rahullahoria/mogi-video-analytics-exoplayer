@@ -1,0 +1,5 @@
+include ':app', ':app1', ':player-lib'
+
+gradle.ext.exoplayerRoot = '/Users/rahullahoria/Downloads/sandbox/ExoPlayer'
+gradle.ext.exoplayerModulePrefix = 'exoplayer-'
+apply from: new File(gradle.ext.exoplayerRoot, 'core_settings.gradle')
