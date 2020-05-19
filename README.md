@@ -38,11 +38,14 @@ TAGS: You can pass multiple tags, which can be seprated with comma ",". Eg. "hin
 
 ## Step 1.
 
+Clone the current project. This will be our main project.
 ```
 git clone https://github.com/rahullahoria/mogi-video-analytics-exoplayer.git
 ```
 
 ## Step 2.
+
+This is Exoplayer fork, which have integration of Mogi Streaming Engine
 
 ```
 git clone 
@@ -55,7 +58,7 @@ Next, add the following to your project's by Step 1 `settings.gradle` file, repl
 `path/to/exoplayer` with the path to your local copy of step 2:
 
 ```gradle
-gradle.ext.exoplayerRoot = 'path/to/exoplayer'
+gradle.ext.exoplayerRoot = 'path/to/exoplayer-with-mogi-streaming-engine by step 2'
 ```
 
 
