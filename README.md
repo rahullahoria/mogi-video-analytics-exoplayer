@@ -48,7 +48,7 @@ git clone https://github.com/rahullahoria/mogi-video-analytics-exoplayer.git
 This is Exoplayer fork, which have integration of Mogi Streaming Engine
 
 ```
-git clone 
+git clone https://github.com/rahullahoria/mogi-exoplayer.git
 ```
 
 ## Step 3.
