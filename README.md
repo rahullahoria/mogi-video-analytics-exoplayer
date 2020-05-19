@@ -19,6 +19,7 @@ VideoAnalytics va = new VideoAnalytics("Your APP ID","Current User Id");
 ```
 
 Your APP ID : is already provide to you
+
 Current User Id: User Id of the user, who is using the app. This id can be used to track back the use for marketing activities
  
 ## Step 3. 
