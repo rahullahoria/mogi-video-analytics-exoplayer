@@ -4,7 +4,9 @@
 
 Add 
 
+```
 https://github.com/rahullahoria/mogi-video-analytics-exoplayer/blob/master/ExoPlayer2Example/app/src/main/java/com/mogi/exoplayer2example/VideoAnalytics.java 
+```
 
 file to your project
 
@@ -12,14 +14,18 @@ file to your project
 
 Create instance of VideoAnalytics file, where you are using ExoPlayer
 
+```
 VideoAnalytics va = new VideoAnalytics("Your APP ID","Current User Id");
- 
+```
+
 Your APP ID : is already provide to you
 Current User Id: User Id of the user, who is using the app. This id can be used to track back the use for marketing activities
  
 ## Step 3. 
 
+```
 player.addListener(va.getListener(player, "URL of the Video, M3U8 playlist file", "TITLE", "Description of Video", "TAGS"));
+```
 
 player : is instance of exoplayer.
 
@@ -32,11 +38,15 @@ TAGS: You can pass multiple tags, which can be seprated with comma ",". Eg. "hin
 
 ## Step 1.
 
+```
 git clone https://github.com/rahullahoria/mogi-video-analytics-exoplayer.git
+```
 
 ## Step 2.
 
+```
 git clone 
+```
 
 ## Step 3.
 
