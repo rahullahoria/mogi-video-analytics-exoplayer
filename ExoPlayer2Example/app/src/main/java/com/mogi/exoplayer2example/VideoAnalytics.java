@@ -1,6 +1,7 @@
 package com.mogi.exoplayer2example;
 
 import android.util.Log;
+import android.widget.Button;
 
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -30,7 +31,9 @@ public class VideoAnalytics {
     private static final String baseUrl = "https://tc.mogiapp.com/events/";
     static long lastUpdate = System.currentTimeMillis();
 
-    static int level = 0;
+
+
+    static int level = 1;
 
     /*
     * {

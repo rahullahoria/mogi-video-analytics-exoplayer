@@ -1,11 +1,16 @@
 package com.mogi.exoplayer2example;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Surface;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
@@ -46,6 +51,9 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
     private PlayerView simpleExoPlayerView;
     private SimpleExoPlayer player;
     private TextView resolutionTextView;
+    private Button btnStream;
+
+    private String streamUrl = "https://mogi-live-stream.b-cdn.net/mogi.m3u8";
 
 
     @Override
@@ -55,8 +63,16 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
         resolutionTextView = new TextView(this);
         resolutionTextView = (TextView) findViewById(R.id.resolution_textView);
 
+        btnStream = (Button) findViewById(R.id.stream);
+
+
+
+        init();
+    }
+
+    private  void  play(){
         // I. ADJUST HERE:
-        final Uri mp4VideoUri =Uri.parse("https://demo.cdn2.mogiapp.com/1580737448705_7wonder/playlist.m3u8"); //ABC NEWS
+        final Uri mp4VideoUri =Uri.parse(streamUrl); //ABC NEWS
 
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); //test
 
@@ -68,12 +84,13 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
         player = ExoPlayerFactory.newSimpleInstance(this, trackSelector);
         simpleExoPlayerView = new SimpleExoPlayerView(this);
         simpleExoPlayerView = (SimpleExoPlayerView) findViewById(R.id.player_view);
+        simpleExoPlayerView.setControllerAutoShow(false);
 
         int h = simpleExoPlayerView.getResources().getConfiguration().screenHeightDp;
         int w = simpleExoPlayerView.getResources().getConfiguration().screenWidthDp;
         //Log.v(TAG, "height : " + h + " weight: " + w);
         ////Set media controller
-        simpleExoPlayerView.setUseController(false);//set to true or false to see controllers
+        simpleExoPlayerView.setUseController(true);//set to true or false to see controllers
         simpleExoPlayerView.requestFocus();
         // Bind the player to the view.
         simpleExoPlayerView.setPlayer(player);
@@ -90,6 +107,19 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
         player.addListener(va.getListener(player,mp4VideoUri.toString(),"7 wonder", "7 beautiful wonders of earth","tag1,tag2,hindi,comedy"));
         player.setPlayWhenReady(true); //run file/link when ready to play.
         player.setVideoDebugListener(this);
+    }
+
+    private void init(){
+        final EditText efu = (EditText) findViewById(R.id.url);
+        efu.setText(streamUrl);
+
+        btnStream.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                streamUrl = efu.getText().toString();
+                play();
+            }
+        });
     }
 
 
