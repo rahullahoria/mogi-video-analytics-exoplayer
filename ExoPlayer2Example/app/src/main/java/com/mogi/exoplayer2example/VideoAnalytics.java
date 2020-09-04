@@ -31,7 +31,7 @@ public class VideoAnalytics {
     private static final String baseUrl = "https://tc.mogiapp.com/events/";
     static long lastUpdate = System.currentTimeMillis();
 
-
+    public long clickToPlay = 0;
 
     static int level = 1;
 
@@ -55,8 +55,13 @@ public class VideoAnalytics {
         this.appId = appId;
         this.userId = userId;
     }
+    public long loadStart = System.currentTimeMillis();
+
 
     public ExoPlayer.DefaultEventListener getListener(final SimpleExoPlayer player, final String url, final String title, final String des, final String tags){
+
+        loadStart = System.currentTimeMillis();
+
         return new ExoPlayer.DefaultEventListener() {
 
 
@@ -88,7 +93,10 @@ public class VideoAnalytics {
 
                 if (playWhenReady && playbackState == ExoPlayer.STATE_READY) {
                     // media actually playing
+                    if( clickToPlay == 0)
+                    clickToPlay = (System.currentTimeMillis() - loadStart)/1000;
                     addEvent(vaIndex,"play",player.getCurrentPosition(),player.getBufferedPercentage());
+
 
                 } else if (playWhenReady) {
                     // might be idle (plays after prepare()),

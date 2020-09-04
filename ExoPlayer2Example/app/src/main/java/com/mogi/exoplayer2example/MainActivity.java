@@ -16,8 +16,13 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
+import com.google.android.exoplayer2.offline.FilteringManifestParser;
 import com.google.android.exoplayer2.source.LoopingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.dash.DashMediaSource;
+import com.google.android.exoplayer2.source.dash.DefaultDashChunkSource;
+import com.google.android.exoplayer2.source.dash.manifest.DashManifestParser;
+import com.google.android.exoplayer2.source.dash.manifest.RepresentationKey;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -30,6 +35,8 @@ import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoRendererEventListener;
+
+import java.util.List;
 
 
 
@@ -70,11 +77,13 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
         init();
     }
 
-    private  void  play(){
-        // I. ADJUST HERE:
-        final Uri mp4VideoUri =Uri.parse(streamUrl); //ABC NEWS
+    DefaultBandwidthMeter bandwidthMeter;
 
-        DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter(); //test
+    private  void  setupPlayer(){
+        // I. ADJUST HERE:
+
+
+        bandwidthMeter = new DefaultBandwidthMeter(); //test
 
         TrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
         TrackSelector trackSelector =
@@ -95,21 +104,37 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
         // Bind the player to the view.
         simpleExoPlayerView.setPlayer(player);
 
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "exoplayer2example"), bandwidthMeter);
-        MediaSource videoSource = new HlsMediaSource(mp4VideoUri, dataSourceFactory, 1, null, null);
-        final LoopingMediaSource loopingSource = new LoopingMediaSource(videoSource);
-        player.prepare(videoSource);
 
-        //Creating instance of Video Analytics Class
-        VideoAnalytics va = new VideoAnalytics("5de51d6e4e8b541fb802d8f3","rahul99");
-
-        //passing event listener to Exoplayer
-        player.addListener(va.getListener(player,mp4VideoUri.toString(),"7 wonder", "7 beautiful wonders of earth","tag1,tag2,hindi,comedy"));
         player.setPlayWhenReady(true); //run file/link when ready to play.
         player.setVideoDebugListener(this);
     }
+    VideoAnalytics va;
+    private  void play(){
+        loadStart = System.currentTimeMillis();
+        final Uri mp4VideoUri =Uri.parse(streamUrl); //ABC NEWS
+        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(this, "exoplayer2example"), bandwidthMeter);
+        MediaSource videoSource = null;
+        if(streamUrl.contains("m3u8"))
+        videoSource = new HlsMediaSource(mp4VideoUri, dataSourceFactory, 1, null, null);
+        else
+        videoSource = new DashMediaSource(mp4VideoUri, dataSourceFactory,
+                new DefaultDashChunkSource.Factory(dataSourceFactory), null, null);
+        player.stop();
+        player.seekTo(0L);
+        player.prepare(videoSource);
+
+        //Creating instance of Video Analytics Class
+        va = new VideoAnalytics("5de51d6e4e8b541fb802d8f3","rahul99");
+
+        //passing event listener to Exoplayer
+        player.addListener(va.getListener(player,mp4VideoUri.toString(),"7 wonder", "7 beautiful wonders of earth","tag1,tag2,hindi,comedy"));
+    }
+
+
 
     private void init(){
+        setupPlayer();
+
         final EditText efu = (EditText) findViewById(R.id.url);
         efu.setText(streamUrl);
 
@@ -143,15 +168,16 @@ public class MainActivity extends AppCompatActivity implements VideoRendererEven
     public void onDroppedFrames(int count, long elapsedMs) {
 
     }
-
+    public long loadStart = System.currentTimeMillis();
     @Override
     public void onVideoSizeChanged(int width, int height, int unappliedRotationDegrees, float pixelWidthHeightRatio) {
         Log.v(TAG, "onVideoSizeChanged [" + " width: " + width + " height: " + height + "]");
-        resolutionTextView.setText("RES:(WxH):" + width + "X" + height + "\n           " + height + "p");//shows video info
+        resolutionTextView.setText("RES:(WxH):" + width + "X" + height + "\n           " + height + "p\n " + va.clickToPlay + " secs" );//shows video info
     }
 
     @Override
     public void onRenderedFirstFrame(Surface surface) {
+        resolutionTextView.setText( (System.currentTimeMillis() - loadStart) + " secs" );//shows video info
 
     }
 
